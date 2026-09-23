@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Northstar Bank — Demo</title>
+<style>
+:root{--navy:#123b78;--navy-600:#0f3266;--red:#d71943;--green:#2e8540;--ink:#1d1f20;--muted:#5b6470;--faint:#98a0ab;--line:#e6e8ec;--bg:#f5f6f8;--card:#ffffff;--danger:#b42318}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f5f5f6;color:#171717}
+button,input{font:inherit}button{cursor:pointer}.screen{display:none;min-height:100vh}.screen.active{display:block}
+.brand{display:flex;align-items:center;gap:8px}.brand-name{color:#123b78;font-weight:800;letter-spacing:2px}
+.brand-icon{width:48px;height:38px;position:relative}.brand-icon span{position:absolute;height:6px;border-radius:3px;transform:rotate(-27deg)}
+.brand-icon span:nth-child(1){width:25px;left:0;top:16px;background:#123b78}.brand-icon span:nth-child(2){width:30px;left:8px;top:8px;background:#d52c49}.brand-icon span:nth-child(3){width:32px;left:14px;top:17px;background:#d52c49}.brand-icon span:nth-child(4){width:29px;left:7px;top:27px;background:#123b78}.brand-icon span:nth-child(5){width:24px;left:22px;top:28px;background:#d52c49}
+.primary-button{border:0;width:174px;height:50px;border-radius:28px;background:#123b78;color:#fff;font-weight:700;letter-spacing:.4px}.primary-button:active{transform:scale(.97)}
+#welcomeScreen{background:#fff}.welcome{min-height:100dvh;position:relative;overflow-y:auto;display:flex;align-items:center;justify-content:center}.welcome::before{content:"";position:absolute;width:125%;height:210px;top:-90px;left:-10%;background:#f5f5f5;transform:rotate(19deg)}.welcome::after{content:"";position:absolute;width:350px;height:150px;right:-130px;bottom:-70px;background:#f6f6f6;transform:rotate(-31deg)}
+.welcome-content{position:relative;z-index:2;width:100%;max-width:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;min-height:100dvh;padding:20px}.welcome-brand{display:flex;flex-direction:column;align-items:center}.welcome-brand .brand-icon{transform:scale(1.4);margin-bottom:15px}.welcome-brand .brand-name{font-size:20px}.welcome-actions{display:flex;flex-direction:column;align-items:center;gap:60px}.privacy{border:0;background:transparent;color:#1762a8;font-size:20px;font-weight:600}
+.login-page{min-height:100vh;background:#fff;overflow-y:auto;padding-bottom:50px}.login-header{height:145px;display:flex;justify-content:center;align-items:center;padding-top:15px}.login-header .brand-name{font-size:25px}.login-card{width:calc(100% - 32px);max-width:545px;margin:auto;padding:20px 22px 30px;background:#fff;border-radius:18px;box-shadow:0 7px 25px rgba(0,0,0,.08)}
+.field{position:relative;height:70px}.field input{width:100%;height:100%;border:0;outline:0;padding:22px 0 0;font-size:17px}.field label{position:absolute;left:0;top:25px;pointer-events:none;color:#333;transition:.15s}.field input:focus+label,.field input:not(:placeholder-shown)+label{top:8px;font-size:12px;color:#1762a8}.field input::placeholder{color:transparent}.divider{height:1px;background:#d5d5d5}.password-toggle{position:absolute;right:0;bottom:13px;border:0;background:transparent;color:#1762a8;font-size:12px;font-weight:700}
+.options{display:flex;justify-content:space-between;margin:17px 0 30px}.option{border:0;background:transparent;display:flex;align-items:center;color:#1762a8;font-size:15px}.circle{width:29px;height:29px;border:1.5px solid #2672bd;border-radius:50%;margin-right:8px;display:flex;align-items:center;justify-content:center}.option.selected .circle{background:#2672bd}.option.selected .circle::after{content:"✓";color:#fff;font-weight:bold}.login-submit{display:block;margin:auto}.login-message{min-height:20px;text-align:center;margin-top:12px;font-size:13px}.login-links{display:flex;justify-content:center;gap:25px;margin-top:27px}.text-link{border:0;background:transparent;color:#0057a8;font-weight:700;font-size:15px}.lower-links{display:flex;justify-content:center;gap:15px;margin-top:32px}.lower-links button{border:0;background:transparent;color:#1762a8;font-size:16px}.info-section{max-width:545px;width:calc(100% - 32px);margin:60px auto 0}.info-title{font-size:14px;color:#666;font-style:italic}.fdic{display:flex;align-items:center;gap:9px}.fdic-logo{font-weight:900;font-size:20px;color:#123b78}.fdic-text{font-size:10px;color:#555}.promo{width:273px;height:166px;margin:25px auto;border:1px solid #777;border-radius:7px;display:flex;align-items:center;background:#fff}.fake-cards{width:120px;height:100px;position:relative}.fake-card{position:absolute;width:78px;height:50px;border-radius:4px;left:25px;top:8px;background:#222}.fake-card:nth-child(2){left:10px;top:25px;background:#ddd}.fake-card:nth-child(3){left:0;top:42px;background:#b52a40}.promo-text{color:#444;font-size:15px}
+#dashboardScreen{background:var(--bg)}.dashboard{width:100%;max-width:640px;margin:0 auto;min-height:100vh;padding-bottom:75px;background:var(--bg)}.dashboard-header{height:158px;background:#fff;padding:14px 16px 0;display:flex;flex-direction:column;box-shadow:0 1px 0 rgba(16,24,40,.05)}.top-icons{height:60px;display:flex;align-items:flex-start;justify-content:space-between}.menu-button{border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center}.hamburger{width:34px;margin:0 auto 4px}.hamburger span{display:block;height:2.5px;background:var(--muted);margin:5px 0;border-radius:2px}.icon-label{color:var(--muted);font-size:12px;font-weight:500}.right-actions{display:flex;gap:22px}.top-action{border:0;background:transparent;padding:0;color:var(--muted);font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:2px}.simple-icon{height:28px;width:30px;font-size:22px;display:flex;align-items:center;justify-content:center}
+.tab-bar{height:78px;display:flex;align-items:flex-end}.tab{height:46px;flex:1;border:0;background:#fff;color:var(--muted);font-size:16px;font-weight:600;position:relative}.tab.active{color:var(--red);font-weight:700}.tab.active::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:3px;background:var(--red)}.dashboard-content{padding:0 16px 30px}.search-row{height:72px;display:flex;align-items:center;gap:12px}.search-box{flex:1;height:48px;background:#eceef1;border-radius:10px;padding:0 14px;display:flex;align-items:center;color:var(--muted)}.search-symbol{font-size:22px;margin-right:10px}.search-placeholder{font-size:15px;white-space:nowrap}.notification{flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-size:20px;display:flex;justify-content:center;align-items:center}
+.greeting-card{margin-top:8px;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04)}.greeting{min-height:72px;padding:18px 16px;border-bottom:1px solid var(--line)}.greeting h2{margin:0;font-size:20px;font-weight:800;color:var(--ink)}.quick-row{min-height:76px;padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:center}.quick-main{flex:1}.quick-main strong{font-size:16px;font-weight:700;color:var(--ink)}.quick-main small{display:block;font-size:13px;color:var(--muted);margin-top:4px}.arrow{font-size:24px;color:var(--faint)}.rewards-row{min-height:56px;padding:14px 16px;font-size:16px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center}.greeting-card::after{content:"Customize Net Worth   ⚙";display:block;margin:16px 16px 14px;text-align:right;color:var(--navy);font-size:13px;font-weight:700}
+.category-card{position:relative;background:var(--card);border-radius:14px;margin-top:16px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04)}.category-card::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--navy) 60%,var(--navy) 100%)}.category-header{min-height:60px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-size:18px;font-weight:800;color:var(--ink)}.category-arrow{font-size:18px;font-weight:800;color:var(--ink)}.institution{min-height:44px;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}.account-line{min-height:68px;padding:12px 16px;display:flex;align-items:center;border-top:1px solid var(--line)}.account-description{flex:1;font-size:16px;font-weight:600;line-height:1.2;color:var(--ink)}.account-value{font-size:17px;font-weight:700;color:var(--ink);white-space:nowrap}.line-arrow{font-size:22px;margin-left:10px;color:var(--faint)}
+.bottom-nav{position:relative;width:100%;height:82px;background:var(--card);border-radius:14px;box-shadow:0 1px 3px rgba(16,24,40,.08);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;z-index:1;margin:16px 0 28px}.bottom-item{flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--muted);font-size:13px;font-weight:600;padding:10px 4px;min-width:0}.bottom-item.active{color:var(--navy)}.bottom-item.active .bottom-label{font-weight:700}.bottom-item.active .bottom-icon{color:var(--navy)}.bottom-item .bottom-icon{font-size:26px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--muted)}.bottom-item .bottom-label{font-size:12px;line-height:1.15;white-space:normal;text-align:center;word-break:break-word}.bottom-item:nth-child(3) .bottom-icon{font-size:24px}.bottom-item:nth-child(4) .bottom-icon{font-size:24px}.bottom-item:nth-child(5) .bottom-icon{font-size:24px}
+@media(max-width:390px){.dashboard-header{height:154px;padding-left:14px;padding-right:14px}.right-actions{gap:16px}.dashboard-content{padding-left:14px;padding-right:14px}.search-placeholder{font-size:14px}.bottom-nav{height:68px;margin:12px 0 16px}.bottom-item .bottom-icon{font-size:22px;height:24px}.bottom-item .bottom-label{font-size:11px}.bottom-item:nth-child(3) .bottom-icon{font-size:20px}.bottom-item:nth-child(4) .bottom-icon{font-size:20px}.bottom-item:nth-child(5) .bottom-icon{font-size:20px}}
+
+.pay-transfer-page{width:100%;max-width:640px;margin:0 auto;min-height:100vh;padding:0 0 75px;background:var(--bg)}.pay-transfer-header{height:158px;background:#fff;padding:14px 16px 0;display:flex;flex-direction:column;box-shadow:0 1px 0 rgba(16,24,40,.05)}.pay-transfer-top-icons{height:60px;display:flex;align-items:flex-start;justify-content:space-between}.pay-transfer-menu-button{border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center}.pay-transfer-hamburger{width:34px;margin:0 auto 4px}.pay-transfer-hamburger span{display:block;height:2.5px;background:var(--muted);margin:5px 0;border-radius:2px}.pay-transfer-menu-label{color:var(--muted);font-size:12px;font-weight:500}.pay-transfer-right-actions{display:flex;gap:22px}.pay-transfer-top-action{border:0;background:transparent;padding:0;color:var(--muted);font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:2px}.pay-transfer-simple-icon{height:28px;width:30px;font-size:22px;display:flex;align-items:center;justify-content:center}.pay-transfer-search-row{height:72px;display:flex;align-items:center;gap:12px}.pay-transfer-search-box{flex:1;height:48px;background:#eceef1;border-radius:10px;padding:0 14px;display:flex;align-items:center;color:var(--muted)}.pay-transfer-search-symbol{font-size:22px;margin-right:10px}.pay-transfer-search-placeholder{font-size:15px;white-space:nowrap}.pay-transfer-notification{flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;font-size:20px;display:flex;justify-content:center;align-items:center}.pay-transfer-main{padding:16px 16px 0}.pay-transfer-grid{display:grid;grid-template-columns:repeat(2, minmax(150px, 1fr));gap:0;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04);border:1px solid var(--line)}.pay-transfer-card{min-height:140px;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}.pay-transfer-card:nth-child(1){border-left:0;border-top:0}.pay-transfer-card:nth-child(2){border-right:0;border-top:0}.pay-transfer-card:nth-child(3){border-left:0;border-bottom:0}.pay-transfer-card:nth-child(4){border-right:0;border-bottom:0}.pay-transfer-card-icon{font-size:32px;color:var(--navy)}.pay-transfer-card-icon.transfer-icon{width:54px;height:54px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 2px 6px rgba(16,24,40,.18);border:3px solid #fff}.pay-transfer-card-title{font-size:16px;font-weight:600;color:var(--ink);text-align:center;margin-top:10px;line-height:1.3}.pay-transfer-card-title span{display:block}.pay-transfer-card-icon.zelle-icon{width:40px;height:40px;border-radius:50%;background:#432873;color:#fff;font-weight:700;font-size:26px;display:flex;align-items:center;justify-content:center}.pay-transfer-card-icon.bill-icon{width:46px;height:46px;border-radius:50%;border:2px solid var(--ink);font-size:20px;display:flex;align-items:center;justify-content:center}.pay-transfer-card-icon.wire-icon{font-size:30px}.pay-transfer-activity{padding:0 16px}.pay-transfer-activity h2{font-size:20px;font-weight:800;color:var(--ink);margin:22px 0 8px}.activity-list{background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04);padding:0;overflow:hidden}.activity-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:14px 16px 6px}.activity-line{min-height:80px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line)}.activity-detail{display:flex;align-items:center;gap:12px}.activity-icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;background:#fff;font-size:20px;color:var(--navy)}.activity-name{font-size:16px;font-weight:700;color:var(--ink)}.activity-date{font-size:13px;color:var(--muted);margin-top:2px}.activity-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.activity-edit{background:#e7e9ee;color:var(--ink);border:0;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700}.activity-cancel{background:transparent;border:0;color:var(--muted);font-size:13px}.activity-history{margin-top:20px}.activity-history-title{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;padding:14px 16px 6px;text-transform:uppercase}.history-line{border-top:1px solid var(--line);min-height:72px;display:flex;align-items:center;justify-content:space-between;padding:14px 16px}.history-left{display:flex;align-items:center;gap:12px}.history-brand{width:44px;height:44px;border-radius:50%;background:linear-gradient(90deg,var(--red),#152850);border:1px solid var(--line)}.history-text{font-size:16px;font-weight:700;color:var(--ink)}.history-date{font-size:13px;color:var(--muted)}.history-amount{font-size:16px;font-weight:700;color:var(--ink);text-align:right}.history-amount span{display:block;font-size:13px;font-weight:400;color:var(--muted)}.activity-icon-pair{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:14px}
+
+.calendar-backdrop{position:fixed;inset:0;background:rgba(16,24,40,.32);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}.calendar-backdrop.open{display:flex}.calendar-dialog{width:min(340px,100%);background:#fff;border-radius:16px;box-shadow:0 16px 50px rgba(16,24,40,.28);padding:0 0 14px;overflow:hidden}.calendar-header{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;background:var(--navy);color:#fff}.calendar-back{border:0;background:transparent;color:#fff;font-size:26px;line-height:1}.calendar-title{font-size:16px;font-weight:700}.calendar-avatar{font-size:16px}.calendar-subheader{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:#eef3f9;border-bottom:1px solid #d7e2f0}.calendar-date-label{font-size:13px;font-weight:800;color:var(--ink)}.calendar-date-value{font-size:13px;color:var(--navy);font-weight:700}.calendar-monthbar{display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px 6px;background:#fff}.calendar-prev,.calendar-next{border:0;background:transparent;color:var(--navy);font-size:26px;line-height:1}.calendar-month-title{font-size:16px;font-weight:700;color:var(--ink)}.calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);background:#fff;padding:0 12px 4px}.calendar-weekdays span{font-size:12px;text-align:center;color:var(--muted);font-weight:700}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:4px 12px 8px}.calendar-day{height:34px;border:0;border-radius:50%;background:#fff;color:var(--ink);font-size:14px;font-weight:600}.calendar-day.outside{color:#c2c6cd}.calendar-day.disabled{color:#c2c6cd;background:#f6f7f9;cursor:not-allowed}.calendar-day.today{border:1px solid var(--navy)}.calendar-day.selected{background:var(--navy);color:#fff;font-weight:700}.calendar-disclosure{display:none}.calendar-footer{display:flex;justify-content:flex-end;gap:12px;padding:6px 16px 0}.calendar-cancel,.calendar-done{border:0;border-radius:20px;padding:9px 20px;font-size:14px;font-weight:700}.calendar-cancel{background:#eef1f6;color:var(--navy)}.calendar-done{background:var(--navy);color:#fff}
+
+.transfer-header{height:72px;background:#fff;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.transfer-title{font-size:22px;font-weight:800;margin:0;color:var(--ink);letter-spacing:-.01em}.transfer-badge{position:absolute;right:16px;width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}.transfer-page{width:100%;max-width:640px;margin:0 auto;min-height:100vh;background:var(--bg);padding:0 0 32px}
+.transfer-section-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:20px 18px 8px}.transfer-section-hint{font-weight:600;letter-spacing:0;text-transform:none}
+.transfer-content{background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.04);margin:0 16px;overflow:hidden}
+.transfer-form-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:8px 16px;border-top:1px solid var(--line)}.transfer-content .transfer-form-row:first-child{border-top:0}.transfer-form-row.active{background:#f3f7fc}
+.transfer-label{font-size:16px;font-weight:700;color:var(--ink);flex:0 0 auto}
+.transfer-input-wrap{display:flex;align-items:center;justify-content:flex-end;flex:1 1 auto;min-width:0;margin-left:auto}
+.transfer-account-content{display:flex;align-items:center;justify-content:flex-end;flex:1 1 auto;min-width:0;margin-left:auto}
+.transfer-account-summary{display:flex;flex-direction:column;align-items:flex-end;margin-left:auto}.transfer-account-name{font-size:18px;color:var(--navy);font-weight:700;line-height:1.2}.transfer-account-balance{font-size:13px;color:var(--muted);margin-top:3px}
+.transfer-account-text{border:0;background:transparent;color:var(--navy);font-size:17px;font-weight:700;text-align:right;padding:0;margin-left:auto}
+.transfer-form-input{border:0;outline:0;width:100%;max-width:300px;background:transparent;text-align:right;font-size:17px;font-weight:600;color:var(--ink);padding:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.transfer-form-input::placeholder{color:var(--faint);font-weight:400;opacity:1}
+.transfer-error-row{display:none;padding:2px 16px 10px}.transfer-error-text{font-size:13px;color:var(--danger);display:block;text-align:right}
+.transfer-date-trigger{border:0;background:transparent;display:inline-flex;align-items:center;gap:8px;color:var(--navy);padding:0;margin-left:auto}.transfer-date-value{font-size:17px;font-weight:700;color:var(--navy);text-align:right}.transfer-date-chevron{font-size:22px;color:var(--faint);line-height:1}
+.transfer-note{margin:20px 16px 0;background:#eef1f6;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px}.transfer-note-icon{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto}.transfer-note-text{font-size:16px;color:var(--ink);font-weight:600}
+.transfer-disclaimer{margin:22px 18px 0;padding:16px 0 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.55}.transfer-disclaimer p{margin:0 0 12px}.transfer-disclaimer p:last-child{margin-bottom:0}
+.transfer-footer-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 16px 24px}.transfer-cancel{border:0;background:#e7e9ee;color:var(--ink);border-radius:24px;padding:13px 30px;font-size:15px;font-weight:700}.transfer-next{border:0;background:var(--navy);color:#fff;border-radius:24px;padding:13px 36px;font-size:15px;font-weight:700}.transfer-cancel:active,.transfer-next:active{transform:scale(.98)}
+
+/* ---- Transfer Details / confirmation screen ---- */
+.transfer-confirm-page{width:100%;max-width:640px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:92px}
+.transfer-confirm-avatar{position:absolute;right:16px;width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+.transfer-confirm-hero{background:var(--bg);padding:28px 20px 22px;text-align:center}
+.transfer-confirm-check{width:56px;height:56px;margin:0 auto 14px;border-radius:50%;border:2px solid var(--green);color:var(--green);font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.transfer-confirm-heading{margin:0;font-size:22px;font-weight:800;color:var(--ink)}
+.transfer-confirm-value{font-size:17px;font-weight:700;color:var(--ink)}
+.transfer-confirm-disclosure{background:var(--navy);color:#fff;margin:22px 16px 0;border-radius:14px;padding:18px 18px}
+.transfer-confirm-disclosure p{margin:0 0 12px;font-size:13px;line-height:1.55}.transfer-confirm-disclosure p:last-child{margin-bottom:0}
+.transfer-confirm-footer{position:fixed;left:0;right:0;bottom:0;width:100%;max-width:640px;margin:0 auto;background:#fff;padding:14px 16px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -2px 12px rgba(16,24,40,.08);border-top:1px solid var(--line);z-index:10}
+.transfer-confirm-done{border:0;background:var(--navy);color:#fff;border-radius:24px;font-size:16px;font-weight:700;width:100%;height:48px}.transfer-confirm-done:active{transform:scale(.99)}
+/* ---- Feature / detail placeholder screen ---- */
+.feature-page{width:100%;max-width:640px;margin:0 auto;min-height:100vh;background:var(--bg);padding:0 0 32px}
+.feature-back{position:absolute;left:10px;border:0;background:transparent;color:var(--navy);font-size:28px;line-height:1}
+.feature-hero{text-align:center;padding:26px 20px 6px}
+.feature-badge{width:64px;height:64px;margin:0 auto 14px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+.feature-purpose{margin:0 auto;font-size:16px;line-height:1.5;color:var(--ink);max-width:440px}
+.feature-item{display:flex;align-items:center;gap:12px;min-height:52px;padding:12px 16px;border-top:1px solid var(--line)}.transfer-content .feature-item:first-child{border-top:0}
+.feature-item-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex:0 0 auto}
+.feature-item-text{font-size:15px;color:var(--ink)}
+.feature-note{margin:16px 18px 0;font-size:13px;color:var(--muted);line-height:1.5}
+.quick-row,.rewards-row,.account-line,.pay-transfer-card,.tab,.menu-button,.top-action,.pay-transfer-menu-button,.pay-transfer-top-action{cursor:pointer}
+
+.account-modal-backdrop{position:fixed;inset:0;background:rgba(16,24,40,.32);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}.account-modal-backdrop.open{display:flex}.account-modal{width:min(520px,100%);max-height:88vh;overflow-y:auto;background:#fff;border-radius:18px;box-shadow:0 16px 50px rgba(16,24,40,.28);padding:18px}.account-modal-head{display:flex;align-items:center;justify-content:space-between}.account-modal-head h3{margin:0;font-size:22px;font-weight:800;color:var(--navy)}.account-modal-close{border:0;background:transparent;color:#667;font-size:30px;line-height:1}.account-modal-content{padding-top:8px}.account-modal-bank{padding:12px 0}.account-modal-bank-lines{display:flex;gap:6px}.account-modal-bank-lines span{display:block;width:20px;height:3px;background:var(--red);border-radius:2px}.account-modal-bank-title{font-size:19px;font-weight:800;margin-top:12px;color:var(--ink)}.account-modal-list{list-style:none;margin:10px 0 0;padding:0}.account-modal-list li{margin:6px 0}.account-modal-account{width:100%;border:0;background:#fff;text-align:left;padding:12px;display:flex;align-items:center;gap:14px;border-radius:10px;transition:background .12s}.account-modal-account:hover{background:#f2f7fd}.account-modal-radio{width:22px;height:22px;border-radius:50%;border:2px solid #9aa2ad;display:inline-block;flex:0 0 auto}.account-modal-account.selected{background:#f2f7fd}.account-modal-account.selected .account-modal-radio{border-color:var(--navy);box-shadow:inset 0 0 0 4px var(--navy)}.account-modal-name{font-size:18px;font-weight:600;color:var(--ink)}.account-modal-balance{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section id="welcomeScreen" class="screen active">
+<div class="welcome"><div class="welcome-content">
+<div class="welcome-brand"><div class="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div class="brand-name">NORTHSTAR BANK</div></div>
+<div class="welcome-actions"><button class="primary-button" onclick="openLogin()">GET STARTED</button></div>
+<button class="privacy" onclick="showPrivacy()">View Privacy Notice</button>
+</div></div>
+</section>
+
+<section id="loginScreen" class="screen">
+<div class="login-page">
+<header class="login-header"><div class="brand"><div class="brand-name">NORTHSTAR BANK</div><div class="brand-icon"><span></span><span></span><span></span><span></span><span></span></div></div></header>
+<div class="login-card">
+<div class="field"><input id="userId" type="text" maxlength="40" placeholder=" " autocomplete="off"><label>User ID</label></div><div class="divider"></div>
+<div class="field"><input id="password" type="password" maxlength="20" placeholder=" " autocomplete="new-password"><label>Password</label><button class="password-toggle" onclick="togglePassword()">SHOW</button></div><div class="divider"></div>
+<div class="options"><button id="saveOption" class="option" onclick="toggleOption('saveOption')"><span class="circle"></span>Save User ID</button><button id="faceOption" class="option" onclick="toggleOption('faceOption')"><span class="circle"></span>Set up Face ID</button></div>
+<button class="primary-button login-submit" onclick="performLogin()">LOG IN</button><div id="loginMessage" class="login-message"></div>
+<div class="login-links"><button class="text-link" onclick="showFeature('forgot')">Forgot user ID/password</button><button class="text-link" onclick="showFeature('enroll')">Enroll</button></div>
+</div>
+<div class="lower-links"><button onclick="showFeature('locations')">Locations</button><span>|</span><button onclick="showFeature('contact')">Contact us</button></div>
+<div class="info-section"><p class="info-title">Northstar Bank deposit products:</p><div class="fdic"><span class="fdic-logo">FDIC</span><span class="fdic-text">Fictional demonstration interface — no real banking services are connected.</span></div></div>
+<div class="promo"><div class="fake-cards"><div class="fake-card"></div><div class="fake-card"></div><div class="fake-card"></div></div><div class="promo-text">Choose the<br>card that<br>works for you</div></div>
+</div>
+</section>
+
+<section id="dashboardScreen" class="screen">
+<div class="dashboard">
+<header class="dashboard-header">
+<div class="top-icons">
+<button class="menu-button" onclick="showFeature('menu')"><div class="hamburger"><span></span><span></span><span></span></div><span class="icon-label">Menu</span></button>
+<div class="right-actions"><button class="top-action" onclick="showFeature('inbox')"><span class="simple-icon">✉</span>Inbox</button><button class="top-action" onclick="showFeature('products')"><span class="simple-icon">🛒</span>Products</button><button class="top-action" onclick="logout()"><span class="simple-icon">→</span>Log Out</button></div>
+</div>
+<div class="tab-bar"><button class="tab active">Accounts</button><button class="tab" onclick="showFeature('dashboard')">Dashboard</button></div>
+</header>
+
+<main class="dashboard-content">
+<div class="search-row"><div class="search-box"><span class="search-symbol">⌕</span><span class="search-placeholder">How can we help?</span></div><div class="notification">≋</div></div>
+
+<div class="greeting-card">
+<div class="greeting"><h2>Hello, Jennie Mcarty</h2></div>
+<div class="quick-row" onclick="showFeature('lifePlan')"><div class="quick-main"><strong>Northstar Life Plan®</strong><small>Your next steps are ready. Let's go!</small></div><span class="arrow">›</span></div>
+<div class="rewards-row" onclick="showFeature('rewards')"><span>My Rewards</span><span class="arrow">›</span></div>
+</div>
+
+<div class="category-card">
+<div class="category-header"><span>Banking</span><span class="category-arrow">$1,240,680.90</span></div>
+<div class="institution">Northstar Bank</div>
+<div class="account-line" onclick="showFeature('account','My Checking')"><div class="account-description">My Checking</div><div class="account-value">$320,450.75</div><div class="line-arrow">›</div></div>
+<div class="account-line" onclick="showFeature('account','My Savings')"><div class="account-description">My Savings</div><div class="account-value">$610,000.00</div><div class="line-arrow">›</div></div>
+</div>
+
+<div class="category-card">
+<div class="category-header"><span>Credit Cards</span><span class="category-arrow">$310,230.15</span></div>
+<div class="institution">Northstar Bank</div>
+<div class="account-line" onclick="showFeature('account','Cash Rewards Card')"><div class="account-description">Cash Rewards Card</div><div class="account-value">$310,230.15</div><div class="line-arrow">›</div></div>
+</div>
+</main>
+
+<nav class="bottom-nav">
+<button class="bottom-item" onclick="showDashboardHome()"><span class="bottom-icon">$</span><span class="bottom-label">Accounts</span></button>
+<button class="bottom-item" onclick="showPayTransferPage()"><span class="bottom-icon">⇄</span><span class="bottom-label">Pay &amp; Transfer</span></button>
+<button class="bottom-item" onclick="showFeature('deposit')"><span class="bottom-icon">▣</span><span class="bottom-label">Deposit Checks</span></button>
+<button class="bottom-item" onclick="showFeature('research')"><span class="bottom-icon">▥</span><span class="bottom-label">Research</span></button>
+<button class="bottom-item" onclick="showFeature('trade')"><span class="bottom-icon">⇆</span><span class="bottom-label">Trade</span></button>
+</nav>
+</div>
+</section>
+
+<section id="payTransferScreen" class="screen">
+<div class="pay-transfer-page">
+<header class="pay-transfer-header">
+<div class="pay-transfer-top-icons">
+<button class="pay-transfer-menu-button" onclick="showFeature('menu')"><div class="pay-transfer-hamburger"><span></span><span></span><span></span></div><span class="pay-transfer-menu-label">Menu</span></button>
+<div class="pay-transfer-right-actions"><button class="pay-transfer-top-action" onclick="showFeature('inbox')"><span class="pay-transfer-simple-icon">✉</span>Inbox</button><button class="pay-transfer-top-action" onclick="showFeature('products')"><span class="pay-transfer-simple-icon">🛒</span>Products</button><button class="pay-transfer-top-action" onclick="showDashboardHome()"><span class="pay-transfer-simple-icon">→</span>Log Out</button></div>
+</div>
+<div class="pay-transfer-search-row"><div class="pay-transfer-search-box"><span class="pay-transfer-search-symbol">⌕</span><span class="pay-transfer-search-placeholder">How can we help?</span></div><div class="pay-transfer-notification">≋</div></div>
+</header>
+
+<main class="pay-transfer-main">
+<div class="pay-transfer-grid">
+<div class="pay-transfer-card" onclick="showTransferPage()">
+<div class="pay-transfer-card-icon transfer-icon">$</div>
+<div class="pay-transfer-card-title"><span>Transfer</span><span>between my accounts</span></div>
+</div>
+<div class="pay-transfer-card" onclick="showFeature('zelle')">
+<div class="pay-transfer-card-icon zelle-icon">Z</div>
+<div class="pay-transfer-card-title"><span>Zelle®</span><span>send or receive</span></div>
+</div>
+<div class="pay-transfer-card" onclick="showFeature('bills')">
+<div class="pay-transfer-card-icon bill-icon">$</div>
+<div class="pay-transfer-card-title"><span>Pay Bills</span><span>pay now or schedule</span></div>
+</div>
+<div class="pay-transfer-card" onclick="showFeature('wire')">
+<div class="pay-transfer-card-icon wire-icon">✈</div>
+<div class="pay-transfer-card-title"><span>Wire</span><span>U.S. or international</span></div>
+</div>
+</div>
+</main>
+
+<section class="pay-transfer-activity">
+<h2>Activity</h2>
+<div class="activity-list">
+<div class="activity-label">SCHEDULED</div>
+<div class="activity-line">
+<div class="activity-detail">
+<div class="activity-icon">$</div>
+<div>
+<div class="activity-name">Energy Co.</div>
+<div class="activity-date">$128,890.24 on SEP 21</div>
+</div>
+</div>
+<div class="activity-actions">
+<button class="activity-edit" onclick="showFeature('edit')">EDIT</button>
+<button class="activity-cancel" onclick="showFeature('cancel')">Cancel</button>
+</div>
+</div>
+<!-- TODO: Replace mock activity data with real Pay & Transfer API data. -->
+<div class="activity-label activity-history-title">HISTORY</div>
+<div class="history-line">
+<div class="history-left">
+<div class="history-brand"></div>
+<div>
+<div class="history-text">My Cash Rewards credit card</div>
+</div>
+</div>
+<div class="history-amount">Aug 15<span>$100,000.00<br>Paid</span></div>
+</div>
+</div>
+</section>
+
+<nav class="bottom-nav">
+<button class="bottom-item" onclick="showDashboardHome()"><span class="bottom-icon">$</span><span class="bottom-label">Accounts</span></button>
+<button class="bottom-item active" onclick="showPayTransferPage()"><span class="bottom-icon">⇄</span><span class="bottom-label">Pay &amp; Transfer</span></button>
+<button class="bottom-item" onclick="showFeature('deposit')"><span class="bottom-icon">▣</span><span class="bottom-label">Deposit Checks</span></button>
+<button class="bottom-item" onclick="showFeature('research')"><span class="bottom-icon">▥</span><span class="bottom-label">Research</span></button>
+<button class="bottom-item" onclick="showFeature('trade')"><span class="bottom-icon">⇆</span><span class="bottom-label">Trade</span></button>
+</nav>
+</div>
+</section>
+
+<section id="transferScreen" class="screen">
+<div class="transfer-page">
+<header class="transfer-header">
+<h1 class="transfer-title">Transfer</h1>
+<div class="transfer-badge" aria-label="Northstar Bank">≋</div>
+</header>
+<p class="transfer-section-label">Send from</p>
+<div class="transfer-content">
+<div class="transfer-form-row" id="fromAccountRow">
+<span class="transfer-label">From</span>
+<div class="transfer-account-content" id="fromAccountContent">
+<button class="transfer-account-text" id="chooseAccountTrigger" type="button">Choose account</button>
+</div>
+</div>
+</div>
+<div class="transfer-error-row" id="fromErrorRow"><span class="transfer-error-text"></span></div>
+
+<p class="transfer-section-label">Send to <span class="transfer-section-hint">— account at another bank</span></p>
+<div class="transfer-content">
+<div class="transfer-form-row">
+<span class="transfer-label">Recipient</span>
+<div class="transfer-input-wrap"><input class="transfer-form-input" id="recipientInput" type="text" maxlength="80" placeholder="Full name on account"></div>
+</div>
+<div class="transfer-form-row">
+<span class="transfer-label">Bank</span>
+<div class="transfer-input-wrap"><input class="transfer-form-input" id="bankInput" type="text" maxlength="100" placeholder="Recipient's bank"></div>
+</div>
+<div class="transfer-form-row">
+<span class="transfer-label">Account number</span>
+<div class="transfer-input-wrap"><input class="transfer-form-input" id="accountNumberInput" type="text" inputmode="numeric" maxlength="17" placeholder="Account number"></div>
+</div>
+<div class="transfer-form-row">
+<span class="transfer-label">Routing number</span>
+<div class="transfer-input-wrap"><input class="transfer-form-input" id="routingNumberInput" type="text" inputmode="numeric" maxlength="9" placeholder="9 digits"></div>
+</div>
+</div>
+<div class="transfer-error-row" id="recipientErrorRow"><span class="transfer-error-text"></span></div>
+<div class="transfer-error-row" id="bankErrorRow"><span class="transfer-error-text"></span></div>
+<div class="transfer-error-row" id="accountNumberErrorRow"><span class="transfer-error-text"></span></div>
+<div class="transfer-error-row" id="routingNumberErrorRow"><span class="transfer-error-text"></span></div>
+
+<p class="transfer-section-label">Amount &amp; date</p>
+<div class="transfer-content">
+<div class="transfer-form-row">
+<span class="transfer-label">Amount</span>
+<div class="transfer-input-wrap"><input class="transfer-form-input amount-input" id="amountInput" type="text" inputmode="decimal" placeholder="Enter amount"></div>
+</div>
+<div class="transfer-form-row transfer-date-row">
+<span class="transfer-label">Date</span>
+<button class="transfer-date-trigger" id="dateTrigger" type="button" aria-label="Date: Select date">
+<span class="transfer-date-value" id="dateValue">Select date</span>
+<span class="transfer-date-chevron" aria-hidden="true">›</span>
+</button>
+</div>
+</div>
+<div class="transfer-error-row" id="amountErrorRow"><span class="transfer-error-text"></span></div>
+<div class="transfer-error-row" id="dateErrorRow"><span class="transfer-error-text"></span></div>
+
+<div class="transfer-note">
+<span class="transfer-note-icon" aria-hidden="true">✈</span>
+<span class="transfer-note-text">Sending a wire? Start here.</span>
+</div>
+<div class="transfer-disclaimer">
+<p>Investment Disclosure Summary<br>
+Investing involves risk. There is always the potential of losing money when you invest in securities. Asset allocation, diversification, and rebalancing may help manage investment risk, but they do not guarantee a profit or protect against losses in declining markets.</p>
+<p>Northstar Bank, its affiliates, and advisors do not provide legal, tax, or accounting advice. Clients should consult their qualified legal and/or tax advisors before making financial decisions.</p>
+<p>Northstar Bank offers a broad range of banking, investment advisory, financial planning, and other financial services. Additional information about these services and the relationship with Northstar Bank is available in the Client Relationship Summary.</p>
+<p>Northstar Bank makes certain investment products and services available to clients. The specific products, services, fees, risks, and terms may vary depending on the client's account and circumstances.</p>
+<p>Past performance does not guarantee future results. Clients should carefully consider the risks, costs, and objectives associated with any investment or service before making an investment decision.</p>
+</div>
+<div class="transfer-footer-actions">
+<button class="transfer-cancel" onclick="showPayTransferPage()">Cancel</button>
+<button class="transfer-next" onclick="validateTransfer()">Next</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="transferConfirmationScreen" class="screen">
+<div class="transfer-confirm-page">
+<header class="transfer-header">
+<h1 class="transfer-title">Transfer Details</h1>
+<div class="transfer-confirm-avatar" aria-label="Northstar Bank">≡</div>
+</header>
+<div class="transfer-confirm-hero">
+<div class="transfer-confirm-check" aria-hidden="true">✓</div>
+<h2 class="transfer-confirm-heading">Your transfer is scheduled</h2>
+</div>
+<div class="transfer-content">
+<div class="transfer-form-row">
+<span class="transfer-label">From</span>
+<div class="transfer-account-summary"><span class="transfer-account-name" id="confirmFromName"></span><span class="transfer-account-balance" id="confirmFromBal"></span></div>
+</div>
+<div class="transfer-form-row">
+<span class="transfer-label">To</span>
+<div class="transfer-account-summary"><span class="transfer-account-name" id="confirmToName"></span><span class="transfer-account-balance" id="confirmToBal"></span></div>
+</div>
+<div class="transfer-form-row"><span class="transfer-label">Amount</span><span class="transfer-confirm-value" id="confirmAmount"></span></div>
+<div class="transfer-form-row"><span class="transfer-label">Date</span><span class="transfer-confirm-value" id="confirmDate"></span></div>
+<div class="transfer-form-row"><span class="transfer-label">Confirmation #</span><span class="transfer-confirm-value" id="confirmNumber"></span></div>
+</div>
+<div class="transfer-confirm-disclosure">
+<p>Please make sure there are sufficient funds in the account from which you are transferring money in order to avoid a possible fee. For details, refer to your account agreement and applicable fee schedule.</p>
+<p>A note to our credit card customers: To avoid late fees and additional interest charges, please make sure your payment covers at least your Total Minimum Payment Due and is made by the due date. Payments made after your due date, but before the receipt of your next bill, will be applied to the current bill.</p>
+<p>You can edit or cancel this transfer by 11:59 PM ET the day before this transaction is scheduled.</p>
+<p>You authorize us to adjust a scheduled payment to an account in order to avoid a payment being scheduled on a day when it cannot be processed, such as a weekend or bank holiday.</p>
+</div>
+<div class="transfer-confirm-footer">
+<button class="transfer-confirm-done" onclick="finishTransfer()">DONE</button>
+</div>
+</div>
+</section>
+
+<section id="featureScreen" class="screen">
+<div class="feature-page">
+<header class="transfer-header">
+<button class="feature-back" id="featureBack" type="button" aria-label="Back">‹</button>
+<h1 class="transfer-title" id="featureTitle">Feature</h1>
+</header>
+<div class="feature-hero">
+<div class="feature-badge" id="featureBadge">$</div>
+<p class="feature-purpose" id="featurePurpose"></p>
+</div>
+<p class="transfer-section-label">What you'll find here</p>
+<div class="transfer-content" id="featureItems"></div>
+<p class="feature-note">This is a demonstration screen. The feature isn't connected to real banking services.</p>
+<div class="transfer-footer-actions" style="justify-content:flex-end">
+<button class="transfer-next" id="featureDone" type="button">Back</button>
+</div>
+</div>
+</section>
+
+<div class="calendar-backdrop" id="calendarBackdrop" aria-hidden="true">
+<div class="calendar-dialog" role="dialog" aria-modal="true" aria-labelledby="calendarTitle">
+<div class="calendar-header">
+<button class="calendar-back" id="calendarBack" aria-label="Back">‹</button>
+<div class="calendar-title" id="calendarTitle">Make a Transfer</div>
+<div class="calendar-avatar" aria-label="Northstar Bank">●</div>
+</div>
+<div class="calendar-subheader">
+<span class="calendar-date-label">Date</span>
+<span class="calendar-date-value" id="calendarSelectedDate">Transfer On: Select date</span>
+</div>
+<div class="calendar-monthbar">
+<button class="calendar-prev" id="calendarPrev" aria-label="Previous month">‹</button>
+<span class="calendar-month-title" id="calendarMonthLabel">August 2024</span>
+<button class="calendar-next" id="calendarNext" aria-label="Next month">›</button>
+</div>
+<div class="calendar-weekdays">
+<span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+</div>
+<div class="calendar-grid" id="calendarGrid"></div>
+<div class="calendar-disclosure">
+<p>Investment Disclosure Summary<br>
+Investing involves risk. There is always the potential of losing money when you invest in securities. Asset allocation, diversification, and rebalancing may help manage investment risk, but they do not guarantee a profit or protect against losses in declining markets.</p>
+</div>
+<div class="calendar-footer">
+<button class="calendar-cancel" id="calendarCancel">CANCEL</button>
+<button class="calendar-done" id="calendarDone">DONE</button>
+</div>
+</div>
+</div>
+
+<div class="account-modal-backdrop" id="accountModal">
+<div class="account-modal" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+<div class="account-modal-head">
+<h3 id="accountModalTitle">Choose Account</h3>
+<button class="account-modal-close" id="modalClose" aria-label="Close account selector">×</button>
+</div>
+<div class="account-modal-content">
+<div class="account-modal-bank">
+<div class="account-modal-bank-lines"><span></span><span></span></div>
+<div class="account-modal-bank-title">Bank Accounts</div>
+<ul class="account-modal-list">
+<li><button class="account-modal-account" data-account-id="checking" data-account-name="My Checking" data-account-balance="$320,450.75">
+<span class="account-modal-radio"></span><span><span class="account-modal-name">My Checking</span><span class="account-modal-balance">Available balance $320,450.75</span></span></button></li>
+<li><button class="account-modal-account" data-account-id="savings" data-account-name="My Savings" data-account-balance="$610,000.00">
+<span class="account-modal-radio"></span><span><span class="account-modal-name">My Savings</span><span class="account-modal-balance">Available balance $610,000.00</span></span></button></li>
+<li><button class="account-modal-account" data-account-id="cash" data-account-name="My Cash Rewards card" data-account-balance="$310,230.15">
+<span class="account-modal-radio"></span><span><span class="account-modal-name">My Cash Rewards card</span><span class="account-modal-balance">Available balance $310,230.15</span></span></button></li>
+</ul>
+</div>
+<div class="account-modal-bank">
+<div class="account-modal-bank-lines"><span></span><span></span></div>
+<div class="account-modal-bank-title">Investment Accounts</div>
+<ul class="account-modal-list">
+<li><button class="account-modal-account" data-account-id="cma" data-account-name="CMA-*******" data-account-balance="$50,000.00">
+<span class="account-modal-radio"></span><span><span class="account-modal-name">CMA-*******</span><span class="account-modal-balance">Available balance $50,000.00</span></span></button></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ---------- element refs ----------
+const dateTrigger=document.getElementById('dateTrigger');
+const dateValue=document.getElementById('dateValue');
+const calendarBackdrop=document.getElementById('calendarBackdrop');
+const calendarGrid=document.getElementById('calendarGrid');
+const calendarMonthLabel=document.getElementById('calendarMonthLabel');
+const calendarSelectedDate=document.getElementById('calendarSelectedDate');
+const calendarPrev=document.getElementById('calendarPrev');
+const calendarNext=document.getElementById('calendarNext');
+const calendarCancel=document.getElementById('calendarCancel');
+const calendarDone=document.getElementById('calendarDone');
+const calendarBack=document.getElementById('calendarBack');
+
+// ---------- transfer state ----------
+let selectedFrom=null;   // {id,name,balance}  (one of the user's own accounts)
+let selectedDate=null;
+let draftDate=null;
+let viewMonth=new Date();
+let lastFocusedTrigger=null;
+
+// ---------- helpers ----------
+function parseCurrency(v){if(!v)return 0;const n=parseFloat(String(v).replace(/[^0-9.]/g,''));return Number.isNaN(n)?0:n;}
+function formatMoney(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2}).format(Number(v)||0);}
+function formatShortDate(d){if(!d)return '';return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(d);}
+function makeConfirmationNumber(){return 'CN'+Math.floor(Math.random()*1e8).toString().padStart(8,'0');}
+function digitsOnly(v){return String(v||'').replace(/\D/g,'');}
+function maskAccount(v){const d=digitsOnly(v);return d?'\u2022\u2022\u2022\u2022'+d.slice(-4):'';}
+
+// ---------- navigation ----------
+function setPath(path,replace){try{window.history[replace?'replaceState':'pushState'](null,'',path);}catch(e){/* file:// or sandboxed origin — ignore */}}
+function showScreen(screen){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));screen.classList.add('active');window.scrollTo(0,0);}
+function openLogin(){showScreen(loginScreen);}
+function showDashboardHome(){showScreen(dashboardScreen);setPath('/dashboard');}
+function showPayTransferPage(){showScreen(payTransferScreen);setPath('/dashboard/pay-transfer');}
+function showTransferPage(){showScreen(transferScreen);setPath('/dashboard/pay-transfer/transfer');}
+
+// ---------- feature / detail placeholder pages ----------
+const FEATURES={
+  menu:{icon:'\u2630',title:'Menu',purpose:'Your full navigation and account settings in one place.',items:['Profile and security settings','All accounts and cards','Statements and documents','Help center and sign out']},
+  inbox:{icon:'\u2709',title:'Inbox',purpose:'Secure messages between you and Northstar Bank.',items:['Account alerts and notifications','Statements ready to view','Replies from customer support','Requests for documents']},
+  products:{icon:'\uD83D\uDECD',title:'Products',purpose:'Explore accounts, cards, and loans you can open.',items:['Checking and savings accounts','Credit cards','Personal and auto loans','Apply online in minutes']},
+  dashboard:{icon:'\u25A6',title:'Dashboard',purpose:'A snapshot of your balances, spending, and insights.',items:['Net worth over time','Spending by category','Upcoming bills','Personalized insights']},
+  lifePlan:{icon:'\u2606',title:'Northstar Life Plan\u00AE',purpose:'Personalized financial goals and guided next steps.',items:['Set and track goals','Retirement projections','Guided action items','Tips from an advisor']},
+  rewards:{icon:'\u2605',title:'My Rewards',purpose:'Points and cash back you have earned.',items:['Current points balance','Redeem for cash or travel','Bonus and limited-time offers','Rewards activity history']},
+  account:{icon:'$',title:'Account details',purpose:'Full activity, balances, and settings for this account.',items:['Recent transactions','Statements and documents','Account and routing numbers','Manage card and alerts']},
+  zelle:{icon:'Z',title:'Zelle\u00AE',purpose:'Send or receive money fast with people you trust.',items:['Send with an email or phone number','Request money from others','Split bills with friends','Usually arrives in minutes']},
+  bills:{icon:'$',title:'Pay Bills',purpose:'Schedule one-time or recurring bill payments.',items:['Add and manage payees','One-time or recurring payments','View scheduled payments','Full payment history']},
+  wire:{icon:'\u2708',title:'Wire Transfer',purpose:'Send domestic or international wires securely.',items:['Domestic wire transfers','International (SWIFT) wires','Track transfer status','Saved wire recipients']},
+  deposit:{icon:'\u25A3',title:'Deposit Checks',purpose:'Deposit a check by taking a photo with your phone.',items:['Snap the front and back','Enter the check amount','See funds availability','Deposit history']},
+  research:{icon:'\u25A5',title:'Research',purpose:'Market data and investment research tools.',items:['Live quotes and charts','Build watchlists','Analyst ratings','Market news']},
+  trade:{icon:'\u21C6',title:'Trade',purpose:'Buy and sell investments from your accounts.',items:['Stocks and ETFs','Choose an order type','View your positions','Order history']},
+  edit:{icon:'\u270E',title:'Edit scheduled payment',purpose:'Change the amount, date, or payee for this payment.',items:['Edit the amount','Change the payment date','Update the payee','Save your changes']},
+  cancel:{icon:'\u2715',title:'Cancel scheduled payment',purpose:'Cancel this upcoming payment before it processes.',items:['Review the payment details','Confirm the cancellation','See refund timing','Undo before the cut-off']},
+  forgot:{icon:'\uD83D\uDD11',title:'Forgot User ID / Password',purpose:'Recover access to your online banking.',items:['Verify your identity','Reset your password','Recover your User ID','Answer security questions']},
+  enroll:{icon:'\u270E',title:'Enroll',purpose:'Set up online banking for the first time.',items:['Verify your identity','Create your credentials','Link your accounts','Set your preferences']},
+  locations:{icon:'\uD83D\uDCCD',title:'Locations',purpose:'Find branches and ATMs near you.',items:['Branch finder','ATM map','Hours and services','Get directions']},
+  contact:{icon:'\u260E',title:'Contact Us',purpose:'Ways to reach Northstar Bank.',items:['Call us','Send a secure message','Schedule a callback','Browse FAQs']}
+};
+let featureReturnScreen='dashboardScreen';
+function showFeature(key,label){
+  const f=FEATURES[key];
+  if(!f)return;
+  const active=document.querySelector('.screen.active');
+  featureReturnScreen=active?active.id:'dashboardScreen';
+  document.getElementById('featureTitle').textContent=label||f.title;
+  document.getElementById('featureBadge').textContent=f.icon;
+  document.getElementById('featurePurpose').textContent=f.purpose;
+  document.getElementById('featureItems').innerHTML=f.items.map(function(t){return '<div class="feature-item"><span class="feature-item-dot"></span><span class="feature-item-text">'+t+'</span></div>';}).join('');
+  showScreen(featureScreen);
+  setPath('/dashboard/'+key);
+}
+function closeFeature(){
+  const el=document.getElementById(featureReturnScreen)||dashboardScreen;
+  showScreen(el);
+}
+
+// ---------- login / misc ----------
+function performLogin(){const user=document.getElementById('userId').value.trim(),password=document.getElementById('password').value,message=document.getElementById('loginMessage');if(!user||!password){message.textContent='Enter a demo User ID and password.';message.style.color='#a33';return}if(user!=='Memphis41'||password!=='MYBANK4182'){message.textContent='Incorrect User ID or password.';message.style.color='#a33';return}message.textContent='Signing in…';message.style.color='#1762a8';setTimeout(()=>showScreen(dashboardScreen),450)}
+function togglePassword(){const input=document.getElementById('password'),button=document.querySelector('.password-toggle');if(input.type==='password'){input.type='text';button.textContent='HIDE'}else{input.type='password';button.textContent='SHOW'}}
+function toggleOption(id){document.getElementById(id).classList.toggle('selected')}
+function logout(){document.getElementById('userId').value='';document.getElementById('password').value='';document.getElementById('loginMessage').textContent='';showScreen(loginScreen)}
+function demoMessage(message){alert(message)}
+function showPrivacy(){alert('Privacy Notice\n\nThis is a fictional banking demonstration. No real banking accounts or financial services are connected to this interface.')}
+
+// ---------- account picker modal ----------
+function openAccountModal(){
+  const modal=document.getElementById('accountModal');
+  if(!modal)return;
+  lastFocusedTrigger=document.activeElement;
+  modal.classList.add('open');
+  const activeId=selectedFrom&&selectedFrom.id;
+  modal.querySelectorAll('.account-modal-account').forEach(b=>b.classList.toggle('selected',b.dataset.accountId===activeId));
+}
+function closeAccountModal(){
+  const modal=document.getElementById('accountModal');
+  if(!modal)return;
+  if(modal.classList.contains('open')){modal.classList.remove('open');if(lastFocusedTrigger)lastFocusedTrigger.focus();}
+}
+function renderFromRow(acct){
+  const content=document.getElementById('fromAccountContent');
+  const row=document.getElementById('fromAccountRow');
+  if(!content)return;
+  content.innerHTML='<div class="transfer-account-summary"><span class="transfer-account-name">'+acct.name+'</span><span class="transfer-account-balance">Available balance '+formatMoney(acct.balance)+'</span></div>';
+  if(row)row.classList.add('active');
+}
+
+// ---------- validation + confirmation ----------
+function showError(rowId,msg){const row=document.getElementById(rowId);if(!row)return;const span=row.querySelector('.transfer-error-text');if(span)span.textContent=msg;row.style.display='block';}
+function clearError(rowId){const row=document.getElementById(rowId);if(!row)return;const span=row.querySelector('.transfer-error-text');if(span)span.textContent='';row.style.display='none';}
+
+function validateTransfer(){
+  let ok=true;
+  if(!selectedFrom){showError('fromErrorRow','Choose the account to send from.');ok=false;}else clearError('fromErrorRow');
+
+  const recipient=document.getElementById('recipientInput').value.trim();
+  if(!recipient){showError('recipientErrorRow',"Enter the recipient's name.");ok=false;}else clearError('recipientErrorRow');
+
+  const bank=document.getElementById('bankInput').value.trim();
+  if(!bank){showError('bankErrorRow',"Enter the recipient's bank name.");ok=false;}else clearError('bankErrorRow');
+
+  const acct=digitsOnly(document.getElementById('accountNumberInput').value);
+  if(!acct){showError('accountNumberErrorRow',"Enter the recipient's account number.");ok=false;}
+  else if(acct.length<4||acct.length>17){showError('accountNumberErrorRow','Account number must be 4-17 digits.');ok=false;}
+  else clearError('accountNumberErrorRow');
+
+  const route=digitsOnly(document.getElementById('routingNumberInput').value);
+  if(!route){showError('routingNumberErrorRow','Enter the 9-digit routing number.');ok=false;}
+  else if(route.length!==9){showError('routingNumberErrorRow','Routing number must be exactly 9 digits.');ok=false;}
+  else clearError('routingNumberErrorRow');
+
+  const amt=parseCurrency(document.getElementById('amountInput').value);
+  if(!amt||amt<=0){showError('amountErrorRow','Enter an amount greater than 0.');ok=false;}
+  else if(selectedFrom&&amt>selectedFrom.balance){showError('amountErrorRow','Amount exceeds available balance.');ok=false;}
+  else clearError('amountErrorRow');
+
+  if(!selectedDate){showError('dateErrorRow','Select a date.');ok=false;}else clearError('dateErrorRow');
+
+  if(ok)showTransferConfirmation(amt,recipient,bank,document.getElementById('accountNumberInput').value);
+}
+
+function showTransferConfirmation(amt,recipient,bank,accountNumber){
+  document.getElementById('confirmFromName').textContent=selectedFrom.name;
+  document.getElementById('confirmFromBal').textContent='Available balance '+formatMoney(selectedFrom.balance);
+  document.getElementById('confirmToName').textContent=recipient;
+  document.getElementById('confirmToBal').textContent=bank+' '+maskAccount(accountNumber);
+  document.getElementById('confirmAmount').textContent=formatMoney(amt);
+  document.getElementById('confirmDate').textContent=formatShortDate(selectedDate);
+  document.getElementById('confirmNumber').textContent=makeConfirmationNumber();
+  showScreen(transferConfirmationScreen);
+  // Replace rather than push, so the completed form is not a back-button destination.
+  setPath('/dashboard/pay-transfer/transfer/confirmation',true);
+}
+
+function finishTransfer(){
+  selectedFrom=null;selectedDate=null;draftDate=null;
+  ['amountInput','recipientInput','bankInput','accountNumberInput','routingNumberInput'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('fromAccountContent').innerHTML='<button class="transfer-account-text" id="chooseAccountTrigger" type="button">Choose account</button>';
+  document.getElementById('fromAccountRow').classList.remove('active');
+  dateValue.textContent='Select date';
+  dateTrigger.setAttribute('aria-label','Date: Select date');
+  ['fromErrorRow','recipientErrorRow','bankErrorRow','accountNumberErrorRow','routingNumberErrorRow','amountErrorRow','dateErrorRow'].forEach(clearError);
+  showPayTransferPage();
+}
+
+// ---------- calendar ----------
+function monthLabelFromDate(date){return new Intl.DateTimeFormat('en-US',{month:'long',year:'numeric'}).format(date)}
+function formatTransferDate(date){if(!date||!(date instanceof Date)||Number.isNaN(date))return 'Select date';return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',year:'numeric'}).format(date)}
+function startOfTodayLocal(){const now=new Date();return new Date(now.getFullYear(),now.getMonth(),now.getDate())}
+function renderCalendarMonth(){
+  calendarMonthLabel.textContent=monthLabelFromDate(viewMonth);
+  calendarSelectedDate.textContent='Transfer On: '+formatTransferDate(draftDate||selectedDate||new Date());
+  const start=new Date(viewMonth.getFullYear(),viewMonth.getMonth(),1);
+  const startWeek=start.getDay();
+  const firstGridDay=new Date(start.getFullYear(),start.getMonth(),start.getDate()-startWeek);
+  const cells=[];
+  for(let i=0;i<42;i++){
+    const d=new Date(firstGridDay.getFullYear(),firstGridDay.getMonth(),firstGridDay.getDate()+i);
+    const inMonth=d.getMonth()===viewMonth.getMonth();
+    const isDisabled=!inMonth || d < startOfTodayLocal();
+    const isSelected=draftDate && d.getFullYear()===draftDate.getFullYear() && d.getMonth()===draftDate.getMonth() && d.getDate()===draftDate.getDate();
+    const isToday=d.getFullYear()===new Date().getFullYear() && d.getMonth()===new Date().getMonth() && d.getDate()===new Date().getDate();
+    const cell=document.createElement('button');
+    cell.type='button';
+    cell.className='calendar-day'+(inMonth?'':' outside')+(isDisabled?' disabled':'')+(isSelected?' selected':'')+(isToday&&!isSelected?' today':'');
+    cell.textContent=d.getDate();
+    cell.disabled=isDisabled;
+    cell.setAttribute('aria-label',formatTransferDate(d)+(isSelected?' selected':'')+(isDisabled?' disabled':''));
+    cell.addEventListener('click',()=>{if(isDisabled)return;draftDate=new Date(d.getFullYear(),d.getMonth(),d.getDate());renderCalendarMonth();});
+    cells.push(cell);
+  }
+  calendarGrid.innerHTML='';
+  cells.forEach(cell=>calendarGrid.appendChild(cell));
+}
+function openCalendar(){
+  const base=selectedDate||new Date();
+  draftDate=selectedDate?new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate()):null;
+  viewMonth=new Date(base.getFullYear(),base.getMonth(),1);
+  renderCalendarMonth();
+  calendarBackdrop.classList.add('open');
+  calendarBackdrop.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeCalendar(){
+  calendarBackdrop.classList.remove('open');
+  calendarBackdrop.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+dateTrigger.addEventListener('click',openCalendar);
+document.getElementById('featureBack').addEventListener('click',closeFeature);
+document.getElementById('featureDone').addEventListener('click',closeFeature);
+calendarCancel.addEventListener('click',function(){draftDate=selectedDate?new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate()):null;closeCalendar();});
+calendarBack.addEventListener('click',function(){draftDate=selectedDate?new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate()):null;closeCalendar();});
+calendarPrev.addEventListener('click',function(){viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()-1,1);renderCalendarMonth();});
+calendarNext.addEventListener('click',function(){viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+1,1);renderCalendarMonth();});
+calendarDone.addEventListener('click',function(){
+  if(draftDate){
+    selectedDate=new Date(draftDate.getFullYear(),draftDate.getMonth(),draftDate.getDate());
+    dateValue.textContent=formatTransferDate(selectedDate);
+    dateTrigger.setAttribute('aria-label','Date: '+formatTransferDate(selectedDate));
+    clearError('dateErrorRow');
+  }
+  closeCalendar();
+});
+calendarBackdrop.addEventListener('click',function(e){if(e.target===calendarBackdrop){draftDate=selectedDate?new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate()):null;closeCalendar();}});
+
+// ---------- global click handling for the From account picker ----------
+document.addEventListener('click',function(e){
+  const modal=document.getElementById('accountModal');
+  const accountButton=e.target.closest('.account-modal-account');
+  const fromRow=e.target.closest('#fromAccountRow');
+  if(fromRow&&!accountButton){openAccountModal();return;}
+  if(accountButton){
+    const acct={id:accountButton.dataset.accountId||'',name:accountButton.dataset.accountName||'',balance:parseCurrency(accountButton.dataset.accountBalance||'0')};
+    selectedFrom=acct;
+    renderFromRow(acct);
+    modal.querySelectorAll('.account-modal-account').forEach(b=>b.classList.toggle('selected',b===accountButton));
+    modal.classList.remove('open');
+    clearError('fromErrorRow');
+    if(lastFocusedTrigger)lastFocusedTrigger.focus();
+    return;
+  }
+  if(e.target.id==='accountModal'||e.target.id==='modalClose')closeAccountModal();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    const modal=document.getElementById('accountModal');
+    if(modal&&modal.classList.contains('open'))closeAccountModal();
+    if(calendarBackdrop.classList.contains('open')){draftDate=selectedDate?new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate()):null;closeCalendar();}
+  }
+});
+// keep account & routing numbers digit-only as typed
+['accountNumberInput','routingNumberInput'].forEach(function(id){
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',function(){const c=this.value.replace(/\D/g,'');if(c!==this.value)this.value=c;});
+});
+document.getElementById('amountInput').addEventListener('input',function(){const c=this.value.replace(/[^0-9.]/g,'');if(c!==this.value)this.value=c;});
+</script>
+</body>
+</html>
