@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Northstar Bank — Demo</title>
+<title>Northstar Bank</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 38'%3E%3Crect width='48' height='38' rx='8' fill='%23ffffff'/%3E%3Crect x='0' y='16' width='25' height='6' rx='3' fill='%23123b78' transform='rotate(-27 12.5 19)'/%3E%3Crect x='8' y='8' width='30' height='6' rx='3' fill='%23d52c49' transform='rotate(-27 23 11)'/%3E%3Crect x='14' y='17' width='32' height='6' rx='3' fill='%23d52c49' transform='rotate(-27 30 20)'/%3E%3Crect x='7' y='27' width='29' height='6' rx='3' fill='%23123b78' transform='rotate(-27 21.5 30)'/%3E%3Crect x='22' y='28' width='24' height='6' rx='3' fill='%23d52c49' transform='rotate(-27 34 31)'/%3E%3C/svg%3E">
 <style>
 :root{--navy:#123b78;--navy-600:#0f3266;--red:#d71943;--green:#2e8540;--ink:#1d1f20;--muted:#5b6470;--faint:#98a0ab;--line:#e6e8ec;--bg:#f5f6f8;--card:#ffffff;--danger:#b42318}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -94,7 +95,7 @@ button,input{font:inherit}button{cursor:pointer}.screen{display:none;min-height:
 <div class="login-links"><button class="text-link" onclick="showFeature('forgot')">Forgot user ID/password</button><button class="text-link" onclick="showFeature('enroll')">Enroll</button></div>
 </div>
 <div class="lower-links"><button onclick="showFeature('locations')">Locations</button><span>|</span><button onclick="showFeature('contact')">Contact us</button></div>
-<div class="info-section"><p class="info-title">Northstar Bank deposit products:</p><div class="fdic"><span class="fdic-logo">FDIC</span><span class="fdic-text">Fictional demonstration interface — no real banking services are connected.</span></div></div>
+<div class="info-section"><p class="info-title">Northstar Bank deposit products:</p><div class="fdic"><span class="fdic-logo">FDIC</span><span class="fdic-text">Fictional interface — no real banking services are connected.</span></div></div>
 <div class="promo"><div class="fake-cards"><div class="fake-card"></div><div class="fake-card"></div><div class="fake-card"></div></div><div class="promo-text">Choose the<br>card that<br>works for you</div></div>
 </div>
 </section>
@@ -339,7 +340,7 @@ Investing involves risk. There is always the potential of losing money when you 
 </div>
 <p class="transfer-section-label">What you'll find here</p>
 <div class="transfer-content" id="featureItems"></div>
-<p class="feature-note">This is a demonstration screen. The feature isn't connected to real banking services.</p>
+<p class="feature-note">This feature isn't connected to real banking services.</p>
 <div class="transfer-footer-actions" style="justify-content:flex-end">
 <button class="transfer-next" id="featureDone" type="button">Back</button>
 </div>
@@ -488,12 +489,12 @@ function closeFeature(){
 }
 
 // ---------- login / misc ----------
-function performLogin(){const user=document.getElementById('userId').value.trim(),password=document.getElementById('password').value,message=document.getElementById('loginMessage');if(!user||!password){message.textContent='Enter a demo User ID and password.';message.style.color='#a33';return}if(user!=='Memphis41'||password!=='MYBANK4182'){message.textContent='Incorrect User ID or password.';message.style.color='#a33';return}message.textContent='Signing in…';message.style.color='#1762a8';setTimeout(()=>showScreen(dashboardScreen),450)}
+function performLogin(){const user=document.getElementById('userId').value.trim(),password=document.getElementById('password').value,message=document.getElementById('loginMessage');if(!user||!password){message.textContent='Enter a User ID and password.';message.style.color='#a33';return}if(user!=='Memphis41'||password!=='MYBANK4182'){message.textContent='Incorrect User ID or password.';message.style.color='#a33';return}message.textContent='Signing in…';message.style.color='#1762a8';setTimeout(()=>showScreen(dashboardScreen),450)}
 function togglePassword(){const input=document.getElementById('password'),button=document.querySelector('.password-toggle');if(input.type==='password'){input.type='text';button.textContent='HIDE'}else{input.type='password';button.textContent='SHOW'}}
 function toggleOption(id){document.getElementById(id).classList.toggle('selected')}
 function logout(){document.getElementById('userId').value='';document.getElementById('password').value='';document.getElementById('loginMessage').textContent='';showScreen(loginScreen)}
 function demoMessage(message){alert(message)}
-function showPrivacy(){alert('Privacy Notice\n\nThis is a fictional banking demonstration. No real banking accounts or financial services are connected to this interface.')}
+function showPrivacy(){alert('Privacy Notice\n\nNo real banking accounts or financial services are connected to this interface.')}
 
 // ---------- account picker modal ----------
 function openAccountModal(){
